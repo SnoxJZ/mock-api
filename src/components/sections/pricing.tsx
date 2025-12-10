@@ -12,6 +12,33 @@ import { PlanCard } from '../plan-card';
 
 export function Pricing() {
   const [isYearly, setIsYearly] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const email = 'joleneunited@tiffincrane.com';
+
+  const handleSubscribe = async () => {
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        body: JSON.stringify({ isYearly, email }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error);
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        console.error('No URL returned', data);
+      }
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Section id="pricing" className="space-y-12">
@@ -68,6 +95,8 @@ export function Pricing() {
             buttonVariant="default"
             footerNote="Cancel anytime"
             isPopular
+            onClick={handleSubscribe}
+            isLoading={loading}
             animationDelay={0.1}
           />
 

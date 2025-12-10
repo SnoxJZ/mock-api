@@ -29,6 +29,8 @@ export interface PlanCardProps {
   popularText?: string;
   animationDelay?: number;
   className?: string;
+  onClick?: () => void;
+  isLoading?: boolean;
 }
 
 export function PlanCard({
@@ -44,6 +46,8 @@ export function PlanCard({
   popularText = 'Most Popular',
   animationDelay = 0,
   className,
+  onClick,
+  isLoading,
 }: PlanCardProps) {
   return (
     <ViewInAnimate
@@ -88,8 +92,13 @@ export function PlanCard({
           </ul>
         </CardContent>
         <CardFooter className={footerNote ? 'flex-col gap-2' : undefined}>
-          <Button variant={buttonVariant} className="w-full">
-            {buttonText}
+          <Button
+            variant={buttonVariant}
+            onClick={onClick}
+            disabled={isLoading}
+            className="w-full"
+          >
+            {isLoading ? 'Redirecting...' : buttonText}
           </Button>
           {footerNote && (
             <p className="text-muted-foreground text-center text-xs">
