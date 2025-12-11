@@ -1,64 +1,58 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { redirect } from 'next/navigation';
 
-import { CheckCircle, Loader2 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { CheckCircle, XCircle } from 'lucide-react';
+import * as Motion from 'motion/react-client';
 
+import { verifyStripeSession } from '@/actions/stripe/verify-session';
 import { Button } from '@/components/ui/button';
 
-export default function PaymentSuccessPage() {
-  const searchParams = useSearchParams();
-  const sessionId = searchParams.get('session_id');
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
+interface Props {
+  searchParams: Promise<{ session_id?: string }>;
+}
 
-  useEffect(() => {
-    if (!sessionId) {
-      router.push('/pricing');
-      return;
-    }
+export default async function PaymentSuccessPage({ searchParams }: Props) {
+  const { session_id } = await searchParams;
 
-    // Optional: verify session with your API
-    // const verifySession = async () => {
-    //   const res = await fetch(`/api/stripe/verify-session?session_id=${sessionId}`);
-    //   const data = await res.json();
-    //   if (!data.valid) {
-    //     router.push('/pricing');
-    //   }
-    // };
-    // verifySession();
+  if (!session_id) {
+    redirect('/#pricing');
+  }
 
-    const timer = setTimeout(() => setLoading(false), 1500);
-    return () => clearTimeout(timer);
-  }, [sessionId, router]);
+  const result = await verifyStripeSession(session_id);
 
-  if (loading) {
+  if (!result.success) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="text-primary h-8 w-8 animate-spin" />
+      <div className="flex min-h-screen flex-col items-center justify-center px-4 text-center">
+        <XCircle className="text-destructive mb-4 h-20 w-20" />
+        <h1 className="text-2xl font-bold">Payment Verification Failed</h1>
+        <p className="text-muted-foreground mt-2">
+          We couldn't verify your payment. Please contact support.
+        </p>
+        <p className="text-muted-foreground mt-1 text-sm">
+          Error: {result.error}
+        </p>
+        <Button variant="outline" className="mt-6" asChild>
+          <Link href="/#pricing">Back to Pricing</Link>
+        </Button>
       </div>
     );
   }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-4">
-      <motion.div
+      <Motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
         className="flex flex-col items-center text-center"
       >
-        <motion.div
+        <Motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
         >
           <CheckCircle className="h-20 w-20 text-green-500" />
-        </motion.div>
+        </Motion.div>
 
         <h1 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">
           Payment Successful!
@@ -76,7 +70,7 @@ export default function PaymentSuccessPage() {
             <Link href="/">Back to Home</Link>
           </Button>
         </div>
-      </motion.div>
+      </Motion.div>
     </main>
   );
 }
