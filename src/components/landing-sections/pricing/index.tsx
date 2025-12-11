@@ -1,47 +1,42 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState, useTransition } from 'react';
 
-import { AnimatePresence, motion } from 'motion/react';
+import AnimatedPrice from './animated-price';
+import { PlanCard } from './plan-card';
+import PricingAlert from './pricing-alert';
+import { toast } from 'sonner';
 
+import { createCheckoutSession } from '@/actions/stripe/checkout';
 import { Label } from '@/components/ui/label';
 import { Container, Section, SectionHeader } from '@/components/ui/section';
 import { Switch } from '@/components/ui/switch';
 
-import { PlanCard } from '../plan-card';
-
 export function Pricing() {
   const [isYearly, setIsYearly] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const email = 'joleneunited@tiffincrane.com';
+  const [isPending, startTransition] = useTransition();
 
-  const handleSubscribe = async () => {
-    setLoading(true);
-
-    try {
-      const res = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        body: JSON.stringify({ isYearly, email }),
-        headers: { 'Content-Type': 'application/json' },
-      });
-      const data = await res.json();
-
-      if (!res.ok) throw new Error(data.error);
-
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        console.error('No URL returned', data);
+  const handleSubscribe = () => {
+    startTransition(async () => {
+      try {
+        const { url } = await createCheckoutSession(isYearly);
+        window.location.href = url;
+      } catch (error) {
+        toast.error('Error creating checkout session', {
+          description:
+            error instanceof Error
+              ? error.message
+              : 'An unknown error occurred',
+        });
       }
-    } catch (error) {
-      console.error('Error creating checkout session:', error);
-    } finally {
-      setLoading(false);
-    }
+    });
   };
 
   return (
     <Section id="pricing" className="space-y-12">
+      <Suspense fallback={null}>
+        <PricingAlert />
+      </Suspense>
       <Container>
         <SectionHeader title="Simple pricing for developers" className="mb-8">
           <div className="flex items-center justify-center gap-4 pt-4">
@@ -96,7 +91,7 @@ export function Pricing() {
             footerNote="Cancel anytime"
             isPopular
             onClick={handleSubscribe}
-            isLoading={loading}
+            isLoading={isPending}
             animationDelay={0.1}
           />
 
@@ -118,40 +113,5 @@ export function Pricing() {
         </div>
       </Container>
     </Section>
-  );
-}
-
-function AnimatedPrice({ isYearly }: { isYearly: boolean }) {
-  return (
-    <>
-      $
-      <div className="relative inline-block h-[1em] w-[2ch] translate-y-1 overflow-hidden">
-        <AnimatePresence mode="popLayout">
-          {isYearly ? (
-            <motion.span
-              key="yearly"
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '-100%' }}
-              transition={{ duration: 0.4, ease: 'circOut' }}
-              className="absolute inset-0 text-center"
-            >
-              24
-            </motion.span>
-          ) : (
-            <motion.span
-              key="monthly"
-              initial={{ y: '-100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ duration: 0.4, ease: 'circOut' }}
-              className="absolute inset-0 text-center"
-            >
-              30
-            </motion.span>
-          )}
-        </AnimatePresence>
-      </div>
-    </>
   );
 }

@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 
 import { Check } from 'lucide-react';
 
+import ViewInAnimate from '@/components/animation/view-in-animate';
 import { Button, ButtonProps } from '@/components/ui/button';
 import {
   Card,
@@ -13,8 +14,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-
-import ViewInAnimate from './animation/view-in-animate';
 
 export interface PlanCardProps {
   title: string;

@@ -1,10 +1,10 @@
-import { CodeIntegration } from '@/components/sections/code-integration';
-import { CTA } from '@/components/sections/cta';
-import { Demo } from '@/components/sections/demo';
-import { FAQ } from '@/components/sections/faq';
-import { Features } from '@/components/sections/features';
-import { Hero } from '@/components/sections/hero';
-import { Pricing } from '@/components/sections/pricing';
+import { CodeIntegration } from '@/components/landing-sections/code-integration';
+import { CTA } from '@/components/landing-sections/cta';
+import { Demo } from '@/components/landing-sections/demo';
+import { FAQ } from '@/components/landing-sections/faq';
+import { Features } from '@/components/landing-sections/features';
+import { Hero } from '@/components/landing-sections/hero';
+import { Pricing } from '@/components/landing-sections/pricing';
 
 export default function Home() {
   return (
