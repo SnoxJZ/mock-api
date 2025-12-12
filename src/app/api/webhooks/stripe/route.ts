@@ -120,7 +120,8 @@ export async function POST(req: NextRequest) {
       user.currentPeriodStart = newPeriodStart;
       user.currentPeriodEnd = newPeriodEnd;
       user.subscriptionStatus = subscription.status;
-      user.cancelAtPeriodEnd = subscription.cancel_at_period_end;
+      user.cancelAtPeriodEnd =
+        subscription.cancel_at_period_end || subscription.cancel_at !== null;
 
       user.subscriptionPlan = getPlanType(subscription.items.data);
       const meteredItem = subscription.items.data.find(

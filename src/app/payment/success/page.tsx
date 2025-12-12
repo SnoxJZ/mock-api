@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { CheckCircle, XCircle } from 'lucide-react';
 import * as Motion from 'motion/react-client';
 
+import { createPortalSession } from '@/actions/stripe/portal';
 import { verifyStripeSession } from '@/actions/stripe/verify-session';
 import { Button } from '@/components/ui/button';
 
@@ -66,9 +67,11 @@ export default async function PaymentSuccessPage({ searchParams }: Props) {
           <Button size="lg" asChild>
             <Link href="/dashboard">Go to Dashboard</Link>
           </Button>
-          <Button variant="outline" size="lg" asChild>
-            <Link href="/">Back to Home</Link>
-          </Button>
+          <form action={createPortalSession}>
+            <Button variant="outline" size="lg" type="submit">
+              Manage your billing information
+            </Button>
+          </form>
         </div>
       </Motion.div>
     </main>

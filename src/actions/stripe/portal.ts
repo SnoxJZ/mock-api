@@ -1,5 +1,7 @@
 'use server';
 
+import { redirect } from 'next/navigation';
+
 import dbConnect from '@/lib/dbConnect';
 import { stripe } from '@/lib/stripe';
 import User, { IUser } from '@/models/User';
@@ -22,8 +24,11 @@ export async function createPortalSession() {
       return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
     });
 
-    return { url: portalSession.url };
+    redirect(portalSession.url);
   } catch (error) {
+    if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+      throw error;
+    }
     throw new Error(
       error instanceof Error ? error.message : 'Internal Server Error',
     );
