@@ -1,5 +1,7 @@
 'use server';
 
+import Stripe from 'stripe';
+
 import dbConnect from '@/lib/dbConnect';
 import { stripe } from '@/lib/stripe';
 import User, { IUser } from '@/models/User';
@@ -38,12 +40,13 @@ export async function createCheckoutSession(isYearly: boolean) {
       await user.save();
     }
 
-    const subscription_data: any = {
-      metadata: { userId: user._id.toString() },
-    };
+    const subscription_data: Stripe.Checkout.SessionCreateParams.SubscriptionData =
+      {
+        metadata: { userId: user._id.toString() },
+      };
 
     if (!user.trialUsed) {
-      subscription_data.trial_period_days = 14;
+      subscription_data.trial_period_days = 15;
     }
 
     const session = await stripe.checkout.sessions.create({
@@ -58,6 +61,9 @@ export async function createCheckoutSession(isYearly: boolean) {
         {
           price: process.env.STRIPE_OVERAGE_PRICE!,
         },
+        ...(user.trialUsed
+          ? []
+          : [{ price: process.env.STRIPE_TRIAL_ACCESS_FEE!, quantity: 1 }]),
       ],
       mode: 'subscription',
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
