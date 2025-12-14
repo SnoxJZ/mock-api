@@ -52,6 +52,9 @@ export async function createCheckoutSession(isYearly: boolean) {
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       line_items: [
+        ...(user.trialUsed
+          ? []
+          : [{ price: process.env.STRIPE_TRIAL_ACCESS_FEE!, quantity: 1 }]),
         {
           price: isYearly
             ? process.env.STRIPE_YEARLY_PRICE!
@@ -61,9 +64,6 @@ export async function createCheckoutSession(isYearly: boolean) {
         {
           price: process.env.STRIPE_OVERAGE_PRICE!,
         },
-        ...(user.trialUsed
-          ? []
-          : [{ price: process.env.STRIPE_TRIAL_ACCESS_FEE!, quantity: 1 }]),
       ],
       mode: 'subscription',
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,

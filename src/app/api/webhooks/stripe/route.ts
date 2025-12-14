@@ -6,11 +6,11 @@ import dbConnect from '@/lib/dbConnect';
 import { stripe } from '@/lib/stripe';
 import User, { IUser } from '@/models/User';
 
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
-
 export async function POST(req: NextRequest) {
   const rawBody = await req.text();
   const signature = req.headers.get('stripe-signature');
+
+  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
   let event;
   if (endpointSecret && signature) {
