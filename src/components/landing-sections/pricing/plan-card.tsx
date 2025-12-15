@@ -30,6 +30,7 @@ export interface PlanCardProps {
   className?: string;
   onClick?: () => void;
   isLoading?: boolean;
+  dataTestId?: string;
 }
 
 export function PlanCard({
@@ -47,6 +48,7 @@ export function PlanCard({
   className,
   onClick,
   isLoading,
+  dataTestId,
 }: PlanCardProps) {
   return (
     <ViewInAnimate
@@ -96,6 +98,7 @@ export function PlanCard({
             onClick={onClick}
             disabled={isLoading}
             className="w-full"
+            data-testid={dataTestId}
           >
             {isLoading ? 'Redirecting...' : buttonText}
           </Button>

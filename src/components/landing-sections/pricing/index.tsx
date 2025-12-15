@@ -93,6 +93,7 @@ export function Pricing() {
             onClick={handleSubscribe}
             isLoading={isPending}
             animationDelay={0.1}
+            dataTestId="subscribe-button"
           />
 
           <PlanCard

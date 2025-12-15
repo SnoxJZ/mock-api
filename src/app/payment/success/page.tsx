@@ -68,7 +68,12 @@ export default async function PaymentSuccessPage({ searchParams }: Props) {
             <Link href="/dashboard">Go to Dashboard</Link>
           </Button>
           <form action={createPortalSession}>
-            <Button variant="outline" size="lg" type="submit">
+            <Button
+              variant="outline"
+              size="lg"
+              type="submit"
+              data-testid="manage-billing-button"
+            >
               Manage your billing information
             </Button>
           </form>

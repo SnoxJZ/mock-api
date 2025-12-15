@@ -52,6 +52,7 @@ export function Navbar() {
           </Link>
           <Link
             href="#pricing"
+            data-testid="pricing-button"
             className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
           >
             Pricing
