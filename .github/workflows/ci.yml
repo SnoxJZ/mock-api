@@ -49,11 +49,15 @@ jobs:
   e2e:
     name: E2E Tests
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 20
     env:
       STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
       NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
       MONGODB_URI: ${{ secrets.MONGODB_URI_TEST }}
+      STRIPE_MONTHLY_PRICE: ${{ secrets.STRIPE_MONTHLY_PRICE }}
+      STRIPE_YEARLY_PRICE: ${{ secrets.STRIPE_YEARLY_PRICE }}
+      STRIPE_OVERAGE_PRICE: ${{ secrets.STRIPE_OVERAGE_PRICE }}
+      STRIPE_TRIAL_ACCESS_FEE: ${{ secrets.STRIPE_TRIAL_ACCESS_FEE }}
 
     steps:
       - uses: actions/checkout@v4
