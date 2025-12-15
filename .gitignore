@@ -44,10 +44,6 @@ next-env.d.ts
 .vscode
 .cursor
 
-pnpm-lock.yaml
-package-lock.json
-yarn.lock
-
 # Playwright
 node_modules/
 /test-results/

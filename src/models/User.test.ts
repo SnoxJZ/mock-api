@@ -14,6 +14,7 @@ describe('User Model Test', () => {
       await mongoose.disconnect();
     }
     await mongoose.connect(uri);
+    await User.syncIndexes();
   }, 20000);
 
   afterAll(async () => {

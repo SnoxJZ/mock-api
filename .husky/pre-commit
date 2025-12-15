@@ -1,1 +1,4 @@
 npx lint-staged
+
+echo "Running Unit Tests..."
+npm run test:ci

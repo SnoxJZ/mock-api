@@ -1,6 +1,12 @@
 import { expect, test } from '@playwright/test';
 
+import { resetTestUser } from './utils/cleanup';
+
 test.use({ locale: 'ru-RU' });
+
+test.afterAll(async () => {
+  await resetTestUser('joleneunited@tiffincrane.com');
+});
 
 test('Complete subscription flow: Checkout -> Success -> Portal -> Cancel', async ({
   page,

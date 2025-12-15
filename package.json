@@ -6,10 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint --fix .",
     "format": "eslint --fix . && prettier --write .",
     "format:check": "prettier --check .",
+
+    "test": "vitest",
+    "test:ci": "vitest run",
+    "e2e": "playwright test",
+
     "prepare": "husky"
   },
   "dependencies": {
