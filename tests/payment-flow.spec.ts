@@ -29,6 +29,10 @@ test('Complete subscription flow: Checkout -> Success -> Portal -> Cancel', asyn
   await page.locator('#cardExpiry').fill('1230');
   await page.locator('#cardCvc').fill('123');
   await page.locator('#billingName').fill('Test User');
+  const postalCode = page.locator('#billingPostalCode');
+  if (await postalCode.isVisible()) {
+    await postalCode.fill('12345');
+  }
 
   const submitBtn = page.getByTestId('hosted-payment-submit-button');
   await expect(submitBtn).toBeEnabled({ timeout: 10000 });
