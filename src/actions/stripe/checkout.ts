@@ -66,6 +66,9 @@ export async function createCheckoutSession(isYearly: boolean) {
         },
       ],
       mode: 'subscription',
+      saved_payment_method_options: {
+        payment_method_save: 'enabled',
+      },
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/?canceled=true#pricing`,
       metadata: {
